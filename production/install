@@ -682,7 +682,7 @@ ext4CreateDir()
         mkdir -p "${BITCOIN_TESTNET_DATA}"
         for folder in chainstate indexes blocks
         do
-            mkdir -p "${BITCOIN_TESTNET_DATA}/${folder}" I absolutely love it. I went to my apartment and sent a message inquiring about if it would be possible
+            mkdir -p "${BITCOIN_TESTNET_DATA}/${folder}"
         done
     fi
 
