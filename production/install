@@ -826,15 +826,14 @@ title="Mempool Fullnode Installer"
 returncode=0
 
 # ASCII art for mempool.space
-MEMPOOL_LOGO="
-███╗   ███╗███████╗███╗   ███╗██████╗  ██████╗  ██████╗ ██╗     
-████╗ ████║██╔════╝████╗ ████║██╔══██╗██╔═══██╗██╔═══██╗██║     
-██╔████╔██║█████╗  ██╔████╔██║██████╔╝██║   ██║██║   ██║██║     
-██║╚██╔╝██║██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║   ██║██║   ██║██║     
-██║ ╚═╝ ██║███████╗██║ ╚═╝ ██║██║     ╚██████╔╝╚██████╔╝███████╗
-╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝╚═╝      ╚═════╝  ╚═════╝ ╚══════╝
-.space
-"
+MEMPOOL_LOGO="                                                                      
+    ███╗   ███╗███████╗███╗   ███╗██████╗  ██████╗  ██████╗ ██╗     
+    ████╗ ████║██╔════╝████╗ ████║██╔══██╗██╔═══██╗██╔═══██╗██║     
+    ██╔████╔██║█████╗  ██╔████╔██║██████╔╝██║   ██║██║   ██║██║     
+    ██║╚██╔╝██║██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║   ██║██║   ██║██║     
+    ██║ ╚═╝ ██║███████╗██║ ╚═╝ ██║██║     ╚██████╔╝╚██████╔╝███████╗
+    ╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝╚═╝      ╚═════╝  ╚═════╝ ╚══════╝
+                                .space                                  "
 
 # Handle menu input
 exec 3>&1
@@ -842,8 +841,8 @@ while true; do
     # Main menu
     choice=$($DIALOG --backtitle "${backtitle}" \
             --title "Install Mempool" \
-            --menu "\n$MEMPOOL_LOGO\n\nSelect an option:" \
-            25 80 3 \
+            --menu "$MEMPOOL_LOGO\n\nSelect an option:" \
+            30 80 3 \
             "1" "Install Mempool" \
             "2" "Advanced" \
             "3" "Exit" \
@@ -884,8 +883,8 @@ EOF
 
             $DIALOG --backtitle "${backtitle}" \
                     --title "${title}" "$@" \
-                    --checklist "Toggle the features below to configure your fullnode:\n" \
-                    20 80 10 \
+            --checklist "Toggle the features below to configure your fullnode:\n" \
+            25 80 14 \
                     --file $input 2> $output
 
             retval=$?
