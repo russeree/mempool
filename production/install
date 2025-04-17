@@ -849,7 +849,7 @@ while true; do
     choice=$($DIALOG --backtitle "${backtitle}" \
             --title "Install Mempool" \
             --menu "$MEMPOOL_LOGO\nSelect an option:" \
-            25 120 3 \
+            40 80 3 \
             "1" "Install Mempool" \
             "2" "Advanced" \
             "3" "Exit" \
