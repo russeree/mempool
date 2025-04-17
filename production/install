@@ -785,6 +785,18 @@ clean_install() {
     # More functionality to be added later
 }
 
+# Function to show advanced menu
+show_advanced_menu() {
+    $DIALOG --backtitle "${backtitle}" \
+            --title "Advanced Options" \
+            --menu "Advanced Options" \
+            15 50 2 \
+            "1" "Clean Install" \
+            "2" "Back to Main Menu" \
+            2>&1 1>&3
+    return $?
+}
+
 # Dialog setup
 : ${DIALOG=dialog}
 
@@ -817,23 +829,51 @@ returncode=0
 exec 3>&1
 while true; do
     # Main menu
-    $DIALOG --backtitle "${backtitle}" \
+    choice=$($DIALOG --backtitle "${backtitle}" \
             --title "${title}" \
             --menu "Main Menu\nPress 'a' for advanced options" \
             15 50 2 \
             "1" "Configure Installation" \
             "2" "Exit" \
-            2>&1 1>&3 || exit 1
+            2>&1 1>&3)
+    main_status=$?
 
-    case $? in
-        0) # Normal selection
-            case $REPLY in
-                1) # Regular configuration
+    # Check if 'a' was pressed (ESC + char code)
+    if [ $main_status -eq 255 ]; then
+        read -n 1 -t 1 key
+        if [ "$key" = "a" ] || [ "$key" = "A" ]; then
+            adv_choice=$(show_advanced_menu)
+            adv_status=$?
+            
+            if [ $adv_status -eq 0 ]; then
+                case $adv_choice in
+                    1) # Clean Install
+                        clean_install
+                        continue
+                        ;;
+                    2) # Back to main menu
+                        continue
+                        ;;
+                esac
+            fi
+            continue
+        fi
+        # Any other key pressed with ESC, exit
+        echo "Installation aborted."
+        exit 1
+    elif [ $main_status -eq 1 ]; then
+        # Cancel pressed
+        echo "Installation aborted."
+        exit 1
+    fi
+
+    case $choice in
+        1) # Regular configuration
                     #################
                     # dialog part 1 #
                     #################
 
-                    $CUT >$input <<-EOF
+            $CUT >$input <<-EOF
 Tor:Enable Tor v3 HS Onion:ON
 CKPool:Enable CKPool Stratum Interface:ON
 Mainnet:Enable Bitcoin Mainnet:ON
@@ -850,60 +890,21 @@ CoreLN:Enable Core Lightning:ON
 Unfurl:Enable Unfurl:ON
 EOF
 
-                    cat $input | sed -e 's/^/"/' -e 's/:/" "/g' -e 's/$/"/' >$output
-                    cat $output >$input
+            cat $input | sed -e 's/^/"/' -e 's/:/" "/g' -e 's/$/"/' >$output
+            cat $output >$input
 
-                    $DIALOG --backtitle "${backtitle}" \
-                            --title "${title}" "$@" \
-                            --checklist "Toggle the features below to configure your fullnode:\n" \
-                            20 80 10 \
-                            --file $input 2> $output
+            $DIALOG --backtitle "${backtitle}" \
+                    --title "${title}" "$@" \
+                    --checklist "Toggle the features below to configure your fullnode:\n" \
+                    20 80 10 \
+                    --file $input 2> $output
 
-                    retval=$?
-                    break
+            retval=$?
+            break
                     ;;
-                2) # Exit
-                    echo "Installation aborted."
-                    exit 1
-                    ;;
-            esac
-            ;;
-        1) # Cancel
+        2) # Exit
             echo "Installation aborted."
             exit 1
-            ;;
-        255) # ESC pressed
-            case $REPLY in
-                97|65) # 'a' or 'A' pressed
-                    # Advanced menu
-                    $DIALOG --backtitle "${backtitle}" \
-                            --title "Advanced Options" \
-                            --menu "Advanced Options" \
-                            15 50 2 \
-                            "1" "Clean Install" \
-                            "2" "Back to Main Menu" \
-                            2>&1 1>&3 || break
-
-                    case $? in
-                        0) # Normal selection
-                            case $REPLY in
-                                1) # Clean Install
-                                    clean_install
-                                    ;;
-                                2) # Back to main menu
-                                    continue
-                                    ;;
-                            esac
-                            ;;
-                        *) # Any other key
-                            continue
-                            ;;
-                    esac
-                    ;;
-                *) # Any other key
-                    continue
-                    ;;
-            esac
             ;;
     esac
 done
