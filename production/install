@@ -828,7 +828,7 @@ returncode=0
 # ASCII art for mempool.space
 MEMPOOL_LOGO="\n\n\
     ╔═══════════════════════════════════════════════════════════════╗\n\
-    ║     ⚡ ₿itcoin Mempool Explorer & Network Statistics ⚡      ║\n\
+    ║     ⚡ ₿itcoin Mempool Explorer & Network Stats ⚡            ║\n\
     ╚═══════════════════════════════════════════════════════════════╝\n\
                                                                      \n\
     ███╗   ███╗███████╗███╗   ███╗██████╗  ██████╗  ██████╗ ██╗    \n\
