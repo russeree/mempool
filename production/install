@@ -825,14 +825,25 @@ backtitle="Mempool Fullnode Installer"
 title="Mempool Fullnode Installer"
 returncode=0
 
+# ASCII art for mempool.space
+MEMPOOL_LOGO="
+███╗   ███╗███████╗███╗   ███╗██████╗  ██████╗  ██████╗ ██╗     
+████╗ ████║██╔════╝████╗ ████║██╔══██╗██╔═══██╗██╔═══██╗██║     
+██╔████╔██║█████╗  ██╔████╔██║██████╔╝██║   ██║██║   ██║██║     
+██║╚██╔╝██║██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║   ██║██║   ██║██║     
+██║ ╚═╝ ██║███████╗██║ ╚═╝ ██║██║     ╚██████╔╝╚██████╔╝███████╗
+╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝╚═╝      ╚═════╝  ╚═════╝ ╚══════╝
+                        .space
+"
+
 # Handle menu input
 exec 3>&1
 while true; do
     # Main menu
     choice=$($DIALOG --backtitle "${backtitle}" \
             --title "Install Mempool" \
-            --menu "Choose an option:" \
-            15 50 3 \
+            --menu "\n$MEMPOOL_LOGO\n\nSelect an option:" \
+            25 80 3 \
             "1" "Install Mempool" \
             "2" "Advanced" \
             "3" "Exit" \
