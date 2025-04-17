@@ -766,7 +766,7 @@ ext4CreateDir()
 
 ##### Perform sanity checks before trying anything
 
-# what OS running, what FS partitions, etc.#BITCOIN_LATEST_RELEASE=$(curl -s https://api.github.com/repos/bitcoin/bitcoin/releases/latest|grep tag_name|head -1|cut -d '"' -f4)
+# what OS running, what FS partitions, etc.
 # how much free disk space available?
 # is something listening on port 80 already?
 # is nginx or apache running?
@@ -1064,7 +1064,7 @@ fi
 #    "BITCOIN_ELECTRS_REPO_BRANCH"       7 1 "${BITCOIN_ELECTRS_REPO_BRANCH}"       7 35 35 0 \
 #    "BITCOIN_ELECTRS_REPO_NAME"         8 1 "${BITCOIN_ELECTRS_REPO_NAME}"         8 35 35 0 \
 #    "BITCOIN_ELECTRS_REPO_URL"          9 1 "${BITCOIN_ELECTRS_REPO_URL}"          9 35 35 0 \
-#    "BITCOIN_LATEST_RELEASE"            10 1 "${BITCOI#BITCOIN_LATEST_RELEASE=$(curl -s https://api.github.com/repos/bitcoin/bitcoin/releases/latest|grep tag_name|head -1|cut -d '"' -f4)N_LATEST_RELEASE}"            10 35 35 0 \
+#    "BITCOIN_LATEST_RELEASE"            10 1 "${BITCOIN_LATEST_RELEASE}"            10 35 35 0 \
 #    "BITCOIN_MAINNET_ENABLE"            11 1 "${BITCOIN_MAINNET_ENABLE}"            11 35 35 0 \
 #    "BITCOIN_REPO_BRANCH"               12 1 "${BITCOIN_REPO_BRANCH}"               12 35 35 0 \
 #    "BITCOIN_REPO_NAME"                 13 1 "${BITCOIN_REPO_NAME}"                 13 35 35 0 \
