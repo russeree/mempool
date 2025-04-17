@@ -367,14 +367,12 @@ echo -n '.'
 UNFURL_REPO_URL=https://github.com/mempool/mempool
 UNFURL_REPO_NAME=unfurl
 UNFURL_REPO_BRANCH=master
-#UNFURL_LATEST_RELEASE=$(curl -s https://api.github.com/repos/mempool/mempool/releases/latest|grep tag_name|head -1|cut -d '"' -f4)
 UNFURL_LATEST_RELEASE=master
 echo -n '.'
 
 ELEMENTS_REPO_URL=https://github.com/ElementsProject/elements
 ELEMENTS_REPO_NAME=elements
 ELEMENTS_REPO_BRANCH=master
-#ELEMENTS_LATEST_RELEASE=$(curl -s https://api.github.com/repos/ElementsProject/elements/releases/latest|grep tag_name|head -1|cut -d '"' -f4)
 ELEMENTS_LATEST_RELEASE=elements-23.2.7
 echo -n '.'
 
@@ -781,6 +779,13 @@ ext4CreateDir()
 # dialog #
 ##########
 
+# Function for clean install
+clean_install() {
+    echo "Clean Install initiated"
+    # More functionality to be added later
+}
+
+# Dialog setup
 : ${DIALOG=dialog}
 
 : ${DIALOG_OK=0}
@@ -808,11 +813,27 @@ backtitle="Mempool Fullnode Installer"
 title="Mempool Fullnode Installer"
 returncode=0
 
-#################
-# dialog part 1 #
-#################
+# Handle keyboard input
+exec 3>&1
+while true; do
+    # Main menu
+    $DIALOG --backtitle "${backtitle}" \
+            --title "${title}" \
+            --menu "Main Menu\nPress 'a' for advanced options" \
+            15 50 2 \
+            "1" "Configure Installation" \
+            "2" "Exit" \
+            2>&1 1>&3 || exit 1
 
-$CUT >$input <<-EOF
+    case $? in
+        0) # Normal selection
+            case $REPLY in
+                1) # Regular configuration
+                    #################
+                    # dialog part 1 #
+                    #################
+
+                    $CUT >$input <<-EOF
 Tor:Enable Tor v3 HS Onion:ON
 CKPool:Enable CKPool Stratum Interface:ON
 Mainnet:Enable Bitcoin Mainnet:ON
@@ -829,16 +850,65 @@ CoreLN:Enable Core Lightning:ON
 Unfurl:Enable Unfurl:ON
 EOF
 
-cat $input | sed -e 's/^/"/' -e 's/:/" "/g' -e 's/$/"/' >$output
-cat $output >$input
+                    cat $input | sed -e 's/^/"/' -e 's/:/" "/g' -e 's/$/"/' >$output
+                    cat $output >$input
 
-$DIALOG --backtitle "${backtitle}" \
-        --title "${title}" "$@" \
-        --checklist "Toggle the features below to configure your fullnode:\n" \
-        20 80 10 \
-        --file $input 2> $output
+                    $DIALOG --backtitle "${backtitle}" \
+                            --title "${title}" "$@" \
+                            --checklist "Toggle the features below to configure your fullnode:\n" \
+                            20 80 10 \
+                            --file $input 2> $output
 
-retval=$?
+                    retval=$?
+                    break
+                    ;;
+                2) # Exit
+                    echo "Installation aborted."
+                    exit 1
+                    ;;
+            esac
+            ;;
+        1) # Cancel
+            echo "Installation aborted."
+            exit 1
+            ;;
+        255) # ESC pressed
+            case $REPLY in
+                97|65) # 'a' or 'A' pressed
+                    # Advanced menu
+                    $DIALOG --backtitle "${backtitle}" \
+                            --title "Advanced Options" \
+                            --menu "Advanced Options" \
+                            15 50 2 \
+                            "1" "Clean Install" \
+                            "2" "Back to Main Menu" \
+                            2>&1 1>&3 || break
+
+                    case $? in
+                        0) # Normal selection
+                            case $REPLY in
+                                1) # Clean Install
+                                    clean_install
+                                    ;;
+                                2) # Back to main menu
+                                    continue
+                                    ;;
+                            esac
+                            ;;
+                        *) # Any other key
+                            continue
+                            ;;
+                    esac
+                    ;;
+                *) # Any other key
+                    continue
+                    ;;
+            esac
+            ;;
+    esac
+done
+exec 3>&-
+
 
 tempfile=$output
 if [ $retval != $DIALOG_OK ];then
